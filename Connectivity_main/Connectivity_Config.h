@@ -6,14 +6,14 @@
 #define WIFI_PASSWORD "cat123456"
 
 // Define API key
-#define API_KEY "AIzaSyBP5vJIqoQP7TIf_MeVPu1gVoGkudfkmf4"
+#define API_KEY "AIzaSyDezQKvPA71G4CmobIlTL9_NIL6E3y3HMI"
 
 // Define URL for Realtime Firebase Database
-#define DATABASE_URL "https://test-4900b-default-rtdb.firebaseio.com/"
+#define DATABASE_URL "https://graduation-project-3158a-default-rtdb.firebaseio.com/"
 
 // Define user login
-#define USER_EMAIL "samaribrahhim2@gmail.com"
-#define USER_PASSWORD "123456"
+#define USER_EMAIL "samaribrahim@std.mans.edu.eg"
+#define USER_PASSWORD "213456"
 
 // Define the user structure
 
@@ -37,10 +37,10 @@ typedef enum __attribute__((packed))
 
 typedef struct __attribute__((__packed__))
 {
-  int user_id;
-  char user_name[20];
+  char user_id[50];
   unsigned int speed_limit;
   Door_Access door;
+  char user_name[50];
   Engine_Access engine;
   Trunk_Access trunk;
 } userData;
