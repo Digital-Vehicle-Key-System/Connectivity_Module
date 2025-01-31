@@ -7,16 +7,25 @@
 #include <Firebase_ESP_Client.h>
 #include <ArduinoJson.h>
 
-// Firebase object definition
+//brief Firebase and Wi-Fi configuration objects.
+ 
 FirebaseData fbdo;
 FirebaseAuth auth;
 FirebaseConfig config;
 
 
-
 userData *users = NULL;
+
 int userCount = 0;
 
+/**
+ * @brief Connects the ESP32 to the specified Wi-Fi network.
+ *
+ * This function attempts to establish a connection to the Wi-Fi network defined by
+ * WIFI_SSID and WIFI_PASSWORD. It blocks execution until a successful connection is made.
+ *
+ * @return ES_OK if the connection is established successfully.
+ */
 ES_t connectToWiFi()
 {
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -31,6 +40,13 @@ ES_t connectToWiFi()
     return ES_OK;
 }
 
+/**
+ * @brief Initializes Firebase configuration and authentication.
+ *
+ * Sets up Firebase API key, user credentials, and database URL.
+ *
+ * @return ES_OK upon successful setup.
+ */
 ES_t setupFirebase()
 {
     config.api_key = API_KEY;
@@ -42,7 +58,14 @@ ES_t setupFirebase()
     return ES_OK;
 }
 
-// Function to add a new user
+/**
+ * @brief Adds a new user to the system.
+ *
+ * Dynamically reallocates memory to store the new user.
+ *
+ * @param newUser The user data to be added.
+ * @return ES_OK if successful, ES_ERROR if memory allocation fails.
+ */
 ES_t addUser(userData newUser)
 {
     userData *temp = (userData *)realloc(users, (userCount + 1) * sizeof(userData));
@@ -57,7 +80,13 @@ ES_t addUser(userData newUser)
     return ES_OK;
 }
 
-// Function to print all stored user data
+/**
+ * @brief Prints all stored user data to the serial monitor.
+ *
+ * Iterates through the user array and displays each user's details.
+ *
+ * @return ES_OK when printing is complete.
+ */
 ES_t printStoredUserData()
 {
     for (int i = 0; i < userCount; i++)
@@ -74,6 +103,13 @@ ES_t printStoredUserData()
     return ES_OK;
 }
 
+/**
+ * @brief Initializes UART communication.
+ *
+ * Sets up serial communication for debugging and communication with Nucleo.
+ *
+ * @return ES_OK upon successful initialization.
+ */
 ES_t Connectivity_CtrlBoardCommvoidInit()
 {
     // Initialize Serial communication for debugging (USB to Serial)
@@ -89,10 +125,17 @@ ES_t Connectivity_CtrlBoardCommvoidInit()
     return ES_OK;
 }
 
-// Function to send user data over UART
+/**
+ * @brief Sends user data over UART.
+ *
+ * Transmits an array of user data structures through Serial2.
+ *
+ * @param dataArray Array containing user data to be sent.
+ * @param userCount Number of users in the array.
+ * @return ES_OK if successful, ES_ERROR if the data array is invalid.
+ */
 ES_t Connectivity_CtrlBoardSendData(const userData *dataArray, int userCount)
 {
-    // Check if the data array is valid
     if (dataArray == NULL || userCount == 0)
     {
         Serial.println("No user data to send.");
@@ -105,7 +148,13 @@ ES_t Connectivity_CtrlBoardSendData(const userData *dataArray, int userCount)
     return ES_OK;
 }
 
-// Function to load data from Firebase
+/**
+ * @brief Loads user data from Firebase and sends it over UART.
+ *
+ * Fetches user data from Firebase RTDB, parses JSON, and sends valid data to the control board.
+ *
+ * @return ES_OK if successful, ES_ERROR if any errors occur during the process.
+ */
 ES_t loadUserDataFromFirebase()
 {
     if (Firebase.RTDB.getJSON(&fbdo, "/users"))
@@ -160,6 +209,7 @@ ES_t loadUserDataFromFirebase()
     }
 
     printStoredUserData();
+
     // Send the user data after loading from Firebase
     Connectivity_CtrlBoardSendData(users, userCount);
 

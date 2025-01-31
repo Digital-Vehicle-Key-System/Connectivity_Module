@@ -12,11 +12,9 @@ void setup()
   setupFirebase();
   loadUserDataFromFirebase();
 
-  /*fbdo.setBSSLBufferSize(4096, 1024);
-  fbdo.setResponseSize(2048);*/
 }
 
 void loop()
 {
-  // العمليات الرئيسية
+ 
 }
